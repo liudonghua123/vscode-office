@@ -65,9 +65,6 @@ export class OfficeViewerProvider implements vscode.CustomReadonlyEditorProvider
             case ".svg":
                 this.handleSvg(uri, webview);
                 break;
-            case ".class":
-                this.handleClass(uri, webviewPanel);
-                break;
             case ".swf":
                 this.handleFlash(uri, handler, webview);
                 break;
@@ -109,28 +106,6 @@ export class OfficeViewerProvider implements vscode.CustomReadonlyEditorProvider
             readFileSync(this.extensionPath + "/resource/flash/flash.html", 'utf8'),
             webview, this.extensionPath + "/resource/flash"
         );
-    }
-
-    private async handleClass(uri: vscode.Uri, panel: vscode.WebviewPanel) {
-
-        let trigger = false;
-        const java = spawn("java", ['-jar', 'fernflower.jar', uri.fsPath, './temp_java'], { cwd: __dirname })
-        java.stdout.on('data', (data) => {
-            if (data.toString("utf8").indexOf("written") == -1 || trigger) {
-                return;
-            }
-            trigger = true;
-            const fileName = `${__dirname}/temp_java/${parse(uri.fsPath).name}.java`;
-            setTimeout(() => {
-                vscode.window.showTextDocument(vscode.Uri.file(fileName).with({ scheme: "decompile_java", query: new Date().getTime().toString() }));
-            }, 10);
-        });
-
-        java.stderr.on('data', (data) => {
-            Console.log(data.toString("utf8"))
-        });
-
-
     }
 
 

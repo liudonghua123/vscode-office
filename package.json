@@ -362,9 +362,6 @@
 						"filenamePattern": "*.webp"
 					},
 					{
-						"filenamePattern": "*.class"
-					},
-					{
 						"filenamePattern": "*.swf"
 					}
 				]
